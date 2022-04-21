@@ -7,9 +7,9 @@ import * as pactum from 'pactum';
 import { AppModule } from '../src/app.module';
 import { AuthDto } from '../src/auth/dto';
 import {
-  CreateBookmarkDto,
-  EditBookmarkDto,
-} from '../src/bookmark/dto';
+  CreateTransactionDto,
+  EditTransactionDto,
+} from '../src/transactions/dto';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { EditUserDto } from '../src/users/dto';
 
@@ -148,12 +148,12 @@ describe('App e2e', () => {
     });
   });
 
-  describe('Bookmarks', () => {
-    describe('Get empty bookmarks', () => {
-      it('should get bookmarks', () => {
+  describe('Transactions', () => {
+    describe('Get empty transactions', () => {
+      it('should get transactions', () => {
         return pactum
           .spec()
-          .get('/bookmarks')
+          .get('/transactions')
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
           })
@@ -163,14 +163,14 @@ describe('App e2e', () => {
     });
 
     describe('Create bookmark', () => {
-      const dto: CreateBookmarkDto = {
-        title: 'First Bookmark',
+      const dto: CreateTransactionDto = {
+        title: 'First Transaction',
         link: 'https://www.youtube.com/watch?v=d6WC5n9G_sM',
       };
       it('should create bookmark', () => {
         return pactum
           .spec()
-          .post('/bookmarks')
+          .post('/transactions')
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
           })
@@ -180,11 +180,11 @@ describe('App e2e', () => {
       });
     });
 
-    describe('Get bookmarks', () => {
-      it('should get bookmarks', () => {
+    describe('Get transactions', () => {
+      it('should get transactions', () => {
         return pactum
           .spec()
-          .get('/bookmarks')
+          .get('/transactions')
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
           })
@@ -193,11 +193,11 @@ describe('App e2e', () => {
       });
     });
 
-    describe('Get bookmark by id', () => {
-      it('should get bookmark by id', () => {
+    describe('Get transaction by id', () => {
+      it('should get transaction by id', () => {
         return pactum
           .spec()
-          .get('/bookmarks/{id}')
+          .get('/transactions/{id}')
           .withPathParams('id', '$S{bookmarkId}')
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
@@ -207,8 +207,8 @@ describe('App e2e', () => {
       });
     });
 
-    describe('Edit bookmark by id', () => {
-      const dto: EditBookmarkDto = {
+    describe('Edit transaction by id', () => {
+      const dto: EditTransactionDto = {
         title:
           'Kubernetes Course - Full Beginners Tutorial (Containerize Your Apps!)',
         description:
@@ -217,7 +217,7 @@ describe('App e2e', () => {
       it('should edit bookmark', () => {
         return pactum
           .spec()
-          .patch('/bookmarks/{id}')
+          .patch('/transactions/{id}')
           .withPathParams('id', '$S{bookmarkId}')
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
@@ -229,11 +229,11 @@ describe('App e2e', () => {
       });
     });
 
-    describe('Delete bookmark by id', () => {
+    describe('Delete transaction by id', () => {
       it('should delete bookmark', () => {
         return pactum
           .spec()
-          .delete('/bookmarks/{id}')
+          .delete('/transactions/{id}')
           .withPathParams('id', '$S{bookmarkId}')
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
@@ -241,10 +241,10 @@ describe('App e2e', () => {
           .expectStatus(204);
       });
 
-      it('should get empty bookmarks', () => {
+      it('should get empty transactions', () => {
         return pactum
           .spec()
-          .get('/bookmarks')
+          .get('/transactions')
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
           })

@@ -13,13 +13,18 @@ import {
 } from '@nestjs/common';
 import { getUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
-import { BookmarkService } from './bookmark.service';
-import { CreateBookmarkDto, EditBookmarkDto } from './dto';
+import { TransactionService } from './transaction.service';
+import {
+  CreateTransactionDto,
+  EditTransactionDto,
+} from './dto';
 
 @UseGuards(JwtGuard)
-@Controller('bookmarks')
-export class BookmarkController {
-  constructor(private bookmarkService: BookmarkService) {}
+@Controller('transactions')
+export class TransactionController {
+  constructor(
+    private bookmarkService: TransactionService
+  ) {}
   @Get()
   findAll(@getUser('id') userId: number) {
     return this.bookmarkService.findAll(userId);
@@ -36,7 +41,7 @@ export class BookmarkController {
   @Post()
   create(
     @getUser('id') userId: number,
-    @Body() dto: CreateBookmarkDto
+    @Body() dto: CreateTransactionDto
   ) {
     return this.bookmarkService.create(userId, dto);
   }
@@ -44,7 +49,7 @@ export class BookmarkController {
   @Patch(':id')
   edit(
     @getUser('id') userId: number,
-    @Body() dto: EditBookmarkDto,
+    @Body() dto: EditTransactionDto,
     @Param('id', ParseIntPipe) bookmarkId: number
   ) {
     return this.bookmarkService.edit(
