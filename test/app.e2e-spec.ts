@@ -12,6 +12,7 @@ import {
 } from '../src/transactions/dto';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { EditUserDto } from '../src/users/dto';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 describe('App e2e', () => {
   let app: INestApplication;
@@ -116,11 +117,29 @@ describe('App e2e', () => {
   });
 
   describe('User', () => {
-    describe('find one', () => {
-      it('should get current user', () => {
+    describe('create', () => {
+      const dto: CreateUserDto = {
+        email: 'jack@test.pl',
+        firstName: 'Jacek',
+      };
+      it('should create a user', () => {
         return pactum
           .spec()
-          .get('/users/find-one')
+          .post('/users')
+          .withBody(dto)
+          .withHeaders({
+            Authorization: 'Bearer $S{userAt}',
+          })
+          .expectStatus(201)
+          .stores('userId', 'id');
+      });
+    });
+
+    describe('findMany', () => {
+      it('should get all users', () => {
+        return pactum
+          .spec()
+          .get('/users')
           .withHeaders({
             Authorization: 'Bearer $S{userAt}',
           })
@@ -128,7 +147,20 @@ describe('App e2e', () => {
       });
     });
 
-    describe('Edit user', () => {
+    describe('findOne', () => {
+      it('should get user by id', () => {
+        return pactum
+          .spec()
+          .get('/users/{id}')
+          .withPathParams('id', '$S{userId}')
+          .withHeaders({
+            Authorization: 'Bearer $S{userAt}',
+          })
+          .expectStatus(200);
+      });
+    });
+
+    describe('edit', () => {
       it('should edit user', () => {
         const dto: EditUserDto = {
           firstName: 'Chief',
@@ -144,6 +176,19 @@ describe('App e2e', () => {
           .expectStatus(200)
           .expectBodyContains(dto.firstName)
           .expectBodyContains(dto.email);
+      });
+    });
+
+    describe('delete', () => {
+      it('should delete user', () => {
+        return pactum
+          .spec()
+          .delete('/users/{id}')
+          .withPathParams('id', '$S{userId}')
+          .withHeaders({
+            Authorization: 'Bearer $S{userAt}',
+          })
+          .expectStatus(204);
       });
     });
   });

@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { EditUserDto } from './dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import * as argon from 'argon2';
 
 @Injectable()
 export class UsersService {
@@ -20,6 +22,16 @@ export class UsersService {
         },
       });
 
+    return user;
+  }
+
+  async create(dto: CreateUserDto) {
+    const defaultHash = await argon.hash('test123');
+    const { hash, ...user } = await this.prisma.user.create(
+      {
+        data: { ...dto, hash: defaultHash },
+      }
+    );
     return user;
   }
 

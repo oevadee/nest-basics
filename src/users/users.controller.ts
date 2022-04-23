@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Patch,
@@ -12,6 +14,7 @@ import {
 import { getUser } from '../auth/decorator';
 import { JwtGuard } from '../auth/guard';
 import { EditUserDto } from './dto';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
 
 @UseGuards(JwtGuard)
@@ -25,8 +28,13 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.findOne(id);
+  findOne(@Param('id', ParseIntPipe) userId: number) {
+    return this.usersService.findOne(userId);
+  }
+
+  @Post()
+  create(@Body() dto: CreateUserDto) {
+    return this.usersService.create(dto);
   }
 
   @Patch()
@@ -37,8 +45,9 @@ export class UsersController {
     return this.usersService.edit(userId, dto);
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.delete(id);
+  delete(@Param('id', ParseIntPipe) userId: number) {
+    return this.usersService.delete(userId);
   }
 }
