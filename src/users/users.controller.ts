@@ -1,10 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
   Patch,
+  Post,
   UseGuards,
 } from '@nestjs/common';
 import { getUser } from '../auth/decorator';
@@ -33,5 +35,10 @@ export class UsersController {
     @Body() dto: EditUserDto
   ) {
     return this.usersService.edit(userId, dto);
+  }
+
+  @Delete(':id')
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.usersService.delete(id);
   }
 }

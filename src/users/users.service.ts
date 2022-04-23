@@ -13,27 +13,38 @@ export class UsersService {
   }
 
   async findOne(userId: number) {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
-    });
+    const { hash, ...user } =
+      await this.prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+      });
 
-    delete user.hash;
     return user;
   }
 
   async edit(userId: number, dto: EditUserDto) {
-    const user = await this.prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        ...dto,
-      },
-    });
+    const { hash, ...user } = await this.prisma.user.update(
+      {
+        where: {
+          id: userId,
+        },
+        data: {
+          ...dto,
+        },
+      }
+    );
 
-    delete user.hash;
     return user;
+  }
+
+  async delete(userId: number) {
+    const { firstName, lastName } =
+      await this.prisma.user.delete({
+        where: {
+          id: userId,
+        },
+      });
+    return `User ${firstName} ${lastName} was successfully deleted`;
   }
 }
